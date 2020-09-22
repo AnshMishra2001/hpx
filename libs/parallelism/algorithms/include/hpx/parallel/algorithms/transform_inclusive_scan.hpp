@@ -10,7 +10,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/invoke_result.hpp>
 #include <hpx/functional/traits/is_invocable.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
@@ -47,8 +47,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             for (/**/; first != last; (void) ++first, ++dest)
             {
-                init = hpx::util::invoke(
-                    op, init, hpx::util::invoke(conv, *first));
+                init = HPX_INVOKE(op, init, HPX_INVOKE(conv, *first));
                 *dest = init;
             }
             return dest;
@@ -60,7 +59,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             if (first != last)
             {
-                auto init = hpx::util::invoke(conv, *first);
+                auto init = HPX_INVOKE(conv, *first);
 
                 *dest++ = init;
                 return sequential_transform_inclusive_scan(++first, last, dest,
@@ -77,8 +76,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             for (/**/; count-- != 0; (void) ++first, ++dest)
             {
-                init = hpx::util::invoke(
-                    op, init, hpx::util::invoke(conv, *first));
+                init = HPX_INVOKE(op, init, HPX_INVOKE(conv, *first));
                 *dest = init;
             }
             return init;
@@ -154,7 +152,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
                     util::loop_n<ExPolicy>(
                         dst, part_size, [&op, &val](FwdIter2 it) -> void {
-                            *it = hpx::util::invoke(op, val, *it);
+                            *it = HPX_INVOKE(op, val, *it);
                         });
                 };
 
@@ -164,8 +162,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     // step 1 performs first part of scan algorithm
                     [op, conv](
                         zip_iterator part_begin, std::size_t part_size) -> T {
-                        T part_init =
-                            hpx::util::invoke(conv, get<0>(*part_begin));
+                        T part_init = HPX_INVOKE(conv, get<0>(*part_begin));
                         get<1>(*part_begin++) = part_init;
 
                         auto iters = part_begin.get_iterator_tuple();
@@ -194,7 +191,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             {
                 if (first != last)
                 {
-                    auto init = hpx::util::invoke(conv, *first);
+                    auto init = HPX_INVOKE(conv, *first);
 
                     *dest++ = init;
                     return parallel(std::forward<ExPolicy>(policy), ++first,

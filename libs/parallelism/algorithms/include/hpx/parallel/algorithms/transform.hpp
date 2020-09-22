@@ -16,7 +16,7 @@
 #endif
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
 #include <hpx/datastructures/tuple.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/traits/is_invocable.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/parallel/util/tagged_pair.hpp>
@@ -53,10 +53,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
             template <typename Iter>
             HPX_HOST_DEVICE HPX_FORCEINLINE auto operator()(Iter curr)
-                -> decltype(
-                    hpx::util::invoke(f_, hpx::util::invoke(proj_, *curr)))
+                -> decltype(HPX_INVOKE(f_, HPX_INVOKE(proj_, *curr)))
             {
-                return hpx::util::invoke(f_, hpx::util::invoke(proj_, *curr));
+                return HPX_INVOKE(f_, HPX_INVOKE(proj_, *curr));
             }
         };
 
@@ -305,12 +304,11 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
             template <typename Iter1, typename Iter2>
             HPX_HOST_DEVICE HPX_FORCEINLINE auto operator()(
-                Iter1 curr1, Iter2 curr2) -> decltype(hpx::util::invoke(f_,
-                hpx::util::invoke(proj1_, *curr1),
-                hpx::util::invoke(proj2_, *curr2)))
+                Iter1 curr1, Iter2 curr2) -> decltype(HPX_INVOKE(f_,
+                HPX_INVOKE(proj1_, *curr1), HPX_INVOKE(proj2_, *curr2)))
             {
-                return hpx::util::invoke(f_, hpx::util::invoke(proj1_, *curr1),
-                    hpx::util::invoke(proj2_, *curr2));
+                return HPX_INVOKE(
+                    f_, HPX_INVOKE(proj1_, *curr1), HPX_INVOKE(proj2_, *curr2));
             }
         };
 

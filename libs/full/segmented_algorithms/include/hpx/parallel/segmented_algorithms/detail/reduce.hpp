@@ -8,7 +8,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/parallel/segmented_algorithms/traits/zip_iterator.hpp>
 
 #include <hpx/executors/execution_policy.hpp>
@@ -80,8 +80,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
             return util::accumulate<T>(
                 first, last,
                 [=](T const& res, reference next) -> T {
-                    return hpx::util::invoke(
-                        r, res, hpx::util::invoke(conv, next));
+                    return HPX_INVOKE(r, res, HPX_INVOKE(conv, next));
                 },
                 std::forward<Convert>(conv));
         }
@@ -98,14 +97,13 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
                 std::forward<ExPolicy>(policy), first,
                 std::distance(first, last),
                 [r, conv](FwdIter part_begin, std::size_t part_size) -> T {
-                    T val = hpx::util::invoke(conv, *part_begin);
+                    T val = HPX_INVOKE(conv, *part_begin);
                     return util::accumulate_n(++part_begin, --part_size,
                         std::move(val),
                         // MSVC14 bails out if r and conv are captured by
                         // reference
                         [=](T const& res, reference next) -> T {
-                            return hpx::util::invoke(
-                                r, res, hpx::util::invoke(conv, next));
+                            return HPX_INVOKE(r, res, HPX_INVOKE(conv, next));
                         });
                 },
                 hpx::util::unwrapping([r](std::vector<T>&& results) -> T {

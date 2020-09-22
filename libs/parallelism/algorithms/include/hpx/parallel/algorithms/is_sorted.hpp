@@ -9,7 +9,7 @@
 #pragma once
 
 #include <hpx/config.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/range.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 
@@ -70,7 +70,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     FwdIter trail = part_begin++;
                     util::loop_n<ExPolicy>(part_begin, part_size - 1,
                         [&trail, &tok, &pred](FwdIter it) -> void {
-                            if (hpx::util::invoke(pred, *it, *trail++))
+                            if (HPX_INVOKE(pred, *it, *trail++))
                             {
                                 tok.cancel();
                             }
@@ -82,7 +82,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
                     if (!tok.was_cancelled() && trail != last)
                     {
-                        return !hpx::util::invoke(pred, *trail, *i);
+                        return !HPX_INVOKE(pred, *trail, *i);
                     }
                     return !tok.was_cancelled();
                 };
@@ -222,7 +222,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     util::loop_idx_n(++base_idx, part_begin, part_size - 1, tok,
                         [&trail, &tok, &pred](
                             reference& v, std::size_t ind) -> void {
-                            if (hpx::util::invoke(pred, v, *trail++))
+                            if (HPX_INVOKE(pred, v, *trail++))
                             {
                                 tok.cancel(ind);
                             }
@@ -235,7 +235,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     if (!tok.was_cancelled(base_idx + part_size) &&
                         trail != last)
                     {
-                        if (hpx::util::invoke(pred, *trail, *i))
+                        if (HPX_INVOKE(pred, *trail, *i))
                         {
                             tok.cancel(base_idx + part_size);
                         }

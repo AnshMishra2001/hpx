@@ -375,7 +375,7 @@ namespace hpx {
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/tag_invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 
@@ -411,7 +411,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             for (/**/; first != last; ++first)
             {
-                if (hpx::util::invoke(proj, *first) == value)
+                if (HPX_INVOKE(proj, *first) == value)
                 {
                     break;
                 }
@@ -458,7 +458,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               std::size_t base_idx) mutable -> void {
                     util::loop_idx_n(base_idx, it, part_size, tok,
                         [&val, &proj, &tok](type& v, std::size_t i) -> void {
-                            if (hpx::util::invoke(proj, v) == val)
+                            if (HPX_INVOKE(proj, v) == val)
                             {
                                 tok.cancel(i);
                             }
@@ -538,7 +538,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             for (/**/; first != last; ++first)
             {
-                if (hpx::util::invoke(pred, hpx::util::invoke(proj, *first)))
+                if (HPX_INVOKE(pred, HPX_INVOKE(proj, *first)))
                 {
                     break;
                 }
@@ -586,8 +586,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               std::size_t base_idx) mutable -> void {
                     util::loop_idx_n(base_idx, it, part_size, tok,
                         [&f, &proj, &tok](type& v, std::size_t i) -> void {
-                            if (hpx::util::invoke(
-                                    f, hpx::util::invoke(proj, v)))
+                            if (HPX_INVOKE(f, HPX_INVOKE(proj, v)))
                             {
                                 tok.cancel(i);
                             }
@@ -671,7 +670,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             for (/**/; first != last; ++first)
             {
-                if (!hpx::util::invoke(pred, hpx::util::invoke(proj, *first)))
+                if (!HPX_INVOKE(pred, HPX_INVOKE(proj, *first)))
                 {
                     break;
                 }
@@ -720,8 +719,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               std::size_t base_idx) mutable -> void {
                     util::loop_idx_n(base_idx, it, part_size, tok,
                         [&f, &proj, &tok](type& v, std::size_t i) -> void {
-                            if (!hpx::util::invoke(
-                                    f, hpx::util::invoke(proj, v)))
+                            if (!HPX_INVOKE(f, HPX_INVOKE(proj, v)))
                             {
                                 tok.cancel(i);
                             }
@@ -818,8 +816,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     {
                         return last1;
                     }
-                    if (!hpx::util::invoke(op, hpx::util::invoke(proj1, *it1),
-                            hpx::util::invoke(proj2, *it2)))
+                    if (!HPX_INVOKE(op, HPX_INVOKE(proj1, *it1),
+                            HPX_INVOKE(proj2, *it2)))
                     {
                         break;
                     }
@@ -921,9 +919,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                         [=, &tok, &curr, &op, &proj1, &proj2](
                             reference t, std::size_t i) -> void {
                             ++curr;
-                            if (hpx::util::invoke(op,
-                                    hpx::util::invoke(proj1, t),
-                                    hpx::util::invoke(proj2, *first2)))
+                            if (HPX_INVOKE(op, HPX_INVOKE(proj1, t),
+                                    HPX_INVOKE(proj2, *first2)))
                             {
                                 difference_type local_count = 1;
                                 FwdIter mid = curr;
@@ -932,9 +929,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                                      local_count != diff && len != count;
                                      (void) ++local_count, ++len, ++mid)
                                 {
-                                    if (!hpx::util::invoke(op,
-                                            hpx::util::invoke(proj1, t),
-                                            hpx::util::invoke(proj2, *first2)))
+                                    if (!HPX_INVOKE(op, HPX_INVOKE(proj1, t),
+                                            HPX_INVOKE(proj2, *first2)))
                                     {
                                         break;
                                     }
@@ -1025,12 +1021,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 {
                     for (InIter2 iter = s_first; iter != s_last; ++iter)
                     {
-                        if (hpx::util::invoke(
-                                util::compare_projected<Pred, Proj1, Proj2>(
-                                    std::forward<Pred>(op),
-                                    std::forward<Proj1>(proj1),
-                                    std::forward<Proj2>(proj2)),
-                                *first, *iter))
+                        if (HPX_INVOKE(op, HPX_INVOKE(proj1, *first),
+                                HPX_INVOKE(proj2, *iter)))
                         {
                             return first;
                         }
@@ -1077,12 +1069,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                             for (FwdIter2 iter = s_first; iter != s_last;
                                  ++iter)
                             {
-                                if (hpx::util::invoke(
-                                        util::compare_projected<Pred, Proj1,
-                                            Proj2>(std::forward<Pred>(op),
-                                            std::forward<Proj1>(proj1),
-                                            std::forward<Proj2>(proj2)),
-                                        v, *iter))
+                                if (HPX_INVOKE(op, HPX_INVOKE(proj1, v),
+                                        HPX_INVOKE(proj2, *iter)))
                                 {
                                     tok.cancel(i);
                                 }

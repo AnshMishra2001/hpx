@@ -174,7 +174,7 @@ namespace hpx {
 #else    // DOXYGEN
 
 #include <hpx/config.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 
 #include <hpx/execution/algorithms/detail/predicates.hpp>
@@ -207,8 +207,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
             Proj1&& proj1, Proj2&& proj2)
         {
             while (first1 != last1 && first2 != last2 &&
-                hpx::util::invoke(f, hpx::util::invoke(proj1, *first1),
-                    hpx::util::invoke(proj2, *first2)))
+                HPX_INVOKE(
+                    f, HPX_INVOKE(proj1, *first1), HPX_INVOKE(proj2, *first2)))
             {
                 ++first1, ++first2;
             }
@@ -284,9 +284,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               std::size_t base_idx) mutable -> void {
                     util::loop_idx_n(base_idx, it, part_count, tok,
                         [&f, &proj1, &proj2, &tok](reference t, std::size_t i) {
-                            if (!hpx::util::invoke(f,
-                                    hpx::util::invoke(proj1, hpx::get<0>(t)),
-                                    hpx::util::invoke(proj2, hpx::get<1>(t))))
+                            if (!HPX_INVOKE(f,
+                                    HPX_INVOKE(proj1, hpx::get<0>(t)),
+                                    HPX_INVOKE(proj2, hpx::get<1>(t))))
                             {
                                 tok.cancel(i);
                             }
@@ -417,8 +417,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               std::size_t base_idx) mutable -> void {
                     util::loop_idx_n(base_idx, it, part_count, tok,
                         [&f, &tok](reference t, std::size_t i) {
-                            if (!hpx::util::invoke(
-                                    f, hpx::get<0>(t), hpx::get<1>(t)))
+                            if (!HPX_INVOKE(f, hpx::get<0>(t), hpx::get<1>(t)))
                             {
                                 tok.cancel(i);
                             }

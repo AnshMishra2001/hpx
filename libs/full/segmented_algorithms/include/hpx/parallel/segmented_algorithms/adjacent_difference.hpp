@@ -8,6 +8,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 
 #include <hpx/executors/execution_policy.hpp>
 #include <hpx/parallel/algorithms/adjacent_difference.hpp>
@@ -99,7 +100,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                         if (beginning != last)
                         {
                             if (curr != end_dest)
-                                *curr = hpx::util::invoke(
+                                *curr = HPX_INVOKE(
                                     op, *beginning, *std::prev(beginning));
                         }
                     }
@@ -118,7 +119,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     if (beginning != last)
                     {
                         if (curr != end_dest)
-                            *curr = hpx::util::invoke(
+                            *curr = HPX_INVOKE(
                                 op, *beginning, *std::prev(beginning));
                     }
                 }
@@ -223,8 +224,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     {
                         FwdIter2 curr = dest;
                         std::advance(curr, std::distance(first, *start));
-                        *curr = hpx::util::invoke(
-                            op, *(*start), *std::prev(*start));
+                        *curr = HPX_INVOKE(op, *(*start), *std::prev(*start));
                         start = std::next(start);
                     }
                     return odest;

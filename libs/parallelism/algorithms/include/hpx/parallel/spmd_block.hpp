@@ -8,6 +8,7 @@
 
 #include <hpx/execution/traits/is_execution_policy.hpp>
 #include <hpx/executors/execution_policy.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/first_argument.hpp>
 #include <hpx/futures/future.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
@@ -162,8 +163,7 @@ namespace hpx { namespace lcos { namespace local {
             {
                 spmd_block block(
                     num_images_, image_id, *barrier_, *barriers_, *mtx_);
-                hpx::util::invoke(
-                    f_, std::move(block), std::forward<Ts>(ts)...);
+                HPX_INVOKE(f_, std::move(block), std::forward<Ts>(ts)...);
             }
         };
     }    // namespace detail

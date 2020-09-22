@@ -10,7 +10,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/parallel/util/tagged_pair.hpp>
 
@@ -42,7 +42,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             for (/* */; first != last; ++first)
             {
-                if (!(hpx::util::invoke(proj, *first) == value))
+                if (!(HPX_INVOKE(proj, *first) == value))
                 {
                     *dest++ = *first;
                 }
@@ -229,7 +229,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     std::forward<ExPolicy>(policy), std::false_type(), first,
                     last, dest,
                     [f = std::forward<F>(f)](value_type const& a) -> bool {
-                        return !hpx::util::invoke(f, a);
+                        return !HPX_INVOKE(f, a);
                     },
                     std::forward<Proj>(proj));
             }

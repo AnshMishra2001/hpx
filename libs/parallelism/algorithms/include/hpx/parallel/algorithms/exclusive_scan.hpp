@@ -10,7 +10,7 @@
 #pragma once
 
 #include <hpx/config.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/iterator_support/zip_iterator.hpp>
 #include <hpx/pack_traversal/unwrap.hpp>
@@ -48,7 +48,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             T temp = init;
             for (/* */; first != last; (void) ++first, ++dest)
             {
-                init = hpx::util::invoke(op, init, *first);
+                init = HPX_INVOKE(op, init, *first);
                 *dest = temp;
                 temp = init;
             }
@@ -62,7 +62,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             T temp = init;
             for (/* */; count-- != 0; (void) ++first, ++dest)
             {
-                init = hpx::util::invoke(op, init, *first);
+                init = HPX_INVOKE(op, init, *first);
                 *dest = temp;
                 temp = init;
             }
@@ -131,7 +131,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     // MSVC 2015 fails if op is captured by reference
                     util::loop_n<ExPolicy>(
                         dst, part_size - 1, [=, &val](FwdIter2 it) {
-                            *it = hpx::util::invoke(op, val, *it);
+                            *it = HPX_INVOKE(op, val, *it);
                         });
                 };
 

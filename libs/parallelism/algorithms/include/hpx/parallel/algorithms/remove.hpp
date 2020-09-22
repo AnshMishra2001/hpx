@@ -10,7 +10,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/parallel/util/tagged_pair.hpp>
 #include <hpx/type_support/unused.hpp>
@@ -113,8 +113,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     // MSVC complains if pred or proj is captured by ref below
                     util::loop_n<ExPolicy>(part_begin, part_size,
                         [pred, proj](zip_iterator it) mutable {
-                            bool f = hpx::util::invoke(
-                                pred, hpx::util::invoke(proj, get<0>(*it)));
+                            bool f =
+                                HPX_INVOKE(pred, HPX_INVOKE(proj, get<0>(*it)));
 
                             get<1>(*it) = f;
                         });

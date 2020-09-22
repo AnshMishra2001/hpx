@@ -13,7 +13,7 @@
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
 #include <hpx/async_distributed/dataflow.hpp>
 #include <hpx/datastructures/tuple.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/futures/future.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/pack_traversal/unwrap.hpp>
@@ -46,13 +46,12 @@ namespace hpx { namespace parallel { inline namespace v1 {
         T sequential_segmented_scan_T(
             InIter first, InIter last, Op&& op, Conv&& conv)
         {
-            T ret = hpx::util::invoke(conv, *first);
+            T ret = HPX_INVOKE(conv, *first);
             if (first != last)
             {
                 for (++first; first != last; ++first)
                 {
-                    ret = hpx::util::invoke(
-                        op, ret, hpx::util::invoke(conv, *first));
+                    ret = HPX_INVOKE(op, ret, HPX_INVOKE(conv, *first));
                 }
             }
             return ret;
@@ -92,15 +91,15 @@ namespace hpx { namespace parallel { inline namespace v1 {
                         FwdIter part_begin, std::size_t part_size) -> T {
                         HPX_UNUSED(policy);
 
-                        T ret = hpx::util::invoke(conv, *part_begin);
+                        T ret = HPX_INVOKE(conv, *part_begin);
                         if (part_size > 1)
                         {
                             // MSVC complains if 'op' is captured by reference
                             util::loop_n<ExPolicy>(part_begin + 1,
                                 part_size - 1,
                                 [&ret, op, conv](FwdIter const& curr) {
-                                    ret = hpx::util::invoke(op, ret,
-                                        hpx::util::invoke(conv, *curr));
+                                    ret = HPX_INVOKE(
+                                        op, ret, HPX_INVOKE(conv, *curr));
                                 });
                         }
                         return ret;
@@ -118,7 +117,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                                     [&ret, op](
                                         typename std::vector<T>::iterator const&
                                             curr) {
-                                        ret = hpx::util::invoke(op, ret, *curr);
+                                        ret = HPX_INVOKE(op, ret, *curr);
                                     });
                             }
                             return ret;

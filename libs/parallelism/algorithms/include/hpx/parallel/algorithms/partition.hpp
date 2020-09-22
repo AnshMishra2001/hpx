@@ -10,7 +10,7 @@
 #include <hpx/config.hpp>
 #include <hpx/assert.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/traits/is_invocable.hpp>
 #include <hpx/futures/future.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
@@ -1086,7 +1086,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             while (first != last)
             {
-                if (hpx::util::invoke(pred, hpx::util::invoke(proj, *first)))
+                if (HPX_INVOKE(pred, HPX_INVOKE(proj, *first)))
                     *dest_true++ = *first;
                 else
                     *dest_false++ = *first;

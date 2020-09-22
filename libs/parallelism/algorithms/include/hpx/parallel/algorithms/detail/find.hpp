@@ -7,7 +7,7 @@
 #pragma once
 
 #include <hpx/config.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 
 namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
 
@@ -33,7 +33,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     {
         for (; first != last; ++first)
         {
-            if (hpx::util::invoke(pred, *first))
+            if (HPX_INVOKE(pred, *first))
             {
                 return first;
             }
@@ -48,7 +48,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     {
         for (; first != last; ++first)
         {
-            if (!hpx::util::invoke(pred, *first))
+            if (!HPX_INVOKE(pred, *first))
             {
                 return first;
             }

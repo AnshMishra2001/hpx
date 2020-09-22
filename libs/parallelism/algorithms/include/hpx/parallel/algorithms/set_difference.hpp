@@ -110,7 +110,7 @@ namespace hpx {
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/tag_invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/type_support/decay.hpp>
@@ -148,16 +148,16 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     return util::copy(first1, last1, dest);
                 }
 
-                auto&& value1 = hpx::util::invoke(proj1, *first1);
-                auto&& value2 = hpx::util::invoke(proj2, *first2);
+                auto&& value1 = HPX_INVOKE(proj1, *first1);
+                auto&& value2 = HPX_INVOKE(proj2, *first2);
 
-                if (hpx::util::invoke(comp, value1, value2))
+                if (HPX_INVOKE(comp, value1, value2))
                 {
                     *dest++ = *first1++;
                 }
                 else
                 {
-                    if (!hpx::util::invoke(comp, value2, value1))
+                    if (!HPX_INVOKE(comp, value2, value1))
                     {
                         ++first1;
                     }

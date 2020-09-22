@@ -14,7 +14,7 @@
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
 #include <hpx/assert.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/parallel/util/tagged_pair.hpp>
 
@@ -51,8 +51,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
             FwdIter smallest = it;
             util::loop_n<ExPolicy>(++it, count - 1,
                 [&f, &smallest, &proj](FwdIter const& curr) -> void {
-                    if (hpx::util::invoke(f, hpx::util::invoke(proj, *curr),
-                            hpx::util::invoke(proj, *smallest)))
+                    if (HPX_INVOKE(f, HPX_INVOKE(proj, *curr),
+                            HPX_INVOKE(proj, *smallest)))
                     {
                         smallest = curr;
                     }
@@ -82,9 +82,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     *it;
                 util::loop_n<ExPolicy>(++it, count - 1,
                     [&f, &smallest, &proj](FwdIter const& curr) -> void {
-                        if (hpx::util::invoke(f,
-                                hpx::util::invoke(proj, **curr),
-                                hpx::util::invoke(proj, *smallest)))
+                        if (HPX_INVOKE(f, HPX_INVOKE(proj, **curr),
+                                HPX_INVOKE(proj, *smallest)))
                         {
                             smallest = *curr;
                         }
@@ -267,8 +266,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
             FwdIter greatest = it;
             util::loop_n<ExPolicy>(++it, count - 1,
                 [&f, &greatest, &proj](FwdIter const& curr) -> void {
-                    if (hpx::util::invoke(f, hpx::util::invoke(proj, *greatest),
-                            hpx::util::invoke(proj, *curr)))
+                    if (HPX_INVOKE(f, HPX_INVOKE(proj, *greatest),
+                            HPX_INVOKE(proj, *curr)))
                     {
                         greatest = curr;
                     }
@@ -298,9 +297,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     *it;
                 util::loop_n<ExPolicy>(++it, count - 1,
                     [&f, &greatest, &proj](FwdIter const& curr) -> void {
-                        if (hpx::util::invoke(f,
-                                hpx::util::invoke(proj, *greatest),
-                                hpx::util::invoke(proj, **curr)))
+                        if (HPX_INVOKE(f, HPX_INVOKE(proj, *greatest),
+                                HPX_INVOKE(proj, **curr)))
                         {
                             greatest = *curr;
                         }
@@ -485,14 +483,14 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
             util::loop_n<ExPolicy>(++it, count - 1,
                 [&f, &result, &proj](FwdIter const& curr) -> void {
-                    if (hpx::util::invoke(f, hpx::util::invoke(proj, *curr),
-                            hpx::util::invoke(proj, *result.first)))
+                    if (HPX_INVOKE(f, HPX_INVOKE(proj, *curr),
+                            HPX_INVOKE(proj, *result.first)))
                     {
                         result.first = curr;
                     }
 
-                    if (!hpx::util::invoke(f, hpx::util::invoke(proj, *curr),
-                            hpx::util::invoke(proj, *result.second)))
+                    if (!HPX_INVOKE(f, HPX_INVOKE(proj, *curr),
+                            HPX_INVOKE(proj, *result.second)))
                     {
                         result.second = curr;
                     }
@@ -523,16 +521,14 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     *it;
                 util::loop_n<ExPolicy>(++it, count - 1,
                     [&f, &result, &proj](PairIter const& curr) -> void {
-                        if (hpx::util::invoke(f,
-                                hpx::util::invoke(proj, *curr->first),
-                                hpx::util::invoke(proj, *result.first)))
+                        if (HPX_INVOKE(f, HPX_INVOKE(proj, *curr->first),
+                                HPX_INVOKE(proj, *result.first)))
                         {
                             result.first = curr->first;
                         }
 
-                        if (!hpx::util::invoke(f,
-                                hpx::util::invoke(proj, *curr->second),
-                                hpx::util::invoke(proj, *result.second)))
+                        if (!HPX_INVOKE(f, HPX_INVOKE(proj, *curr->second),
+                                HPX_INVOKE(proj, *result.second)))
                         {
                             result.second = curr->second;
                         }

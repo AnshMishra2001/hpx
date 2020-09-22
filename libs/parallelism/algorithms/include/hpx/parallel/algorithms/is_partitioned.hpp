@@ -10,7 +10,7 @@
 #pragma once
 
 #include <hpx/config.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/futures/future.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/type_support/unused.hpp>
@@ -91,13 +91,13 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 auto f1 = [tok, pred = std::forward<Pred>(pred)](
                               Iter part_begin,
                               std::size_t part_count) mutable -> bool {
-                    bool fst_bool = hpx::util::invoke(pred, *part_begin);
+                    bool fst_bool = HPX_INVOKE(pred, *part_begin);
                     if (part_count == 1)
                         return fst_bool;
 
                     util::loop_n<ExPolicy>(++part_begin, --part_count, tok,
                         [&fst_bool, &pred, &tok](Iter const& a) -> void {
-                            if (fst_bool != hpx::util::invoke(pred, *a))
+                            if (fst_bool != HPX_INVOKE(pred, *a))
                             {
                                 if (fst_bool)
                                     fst_bool = false;

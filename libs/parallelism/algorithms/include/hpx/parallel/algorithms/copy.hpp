@@ -203,7 +203,7 @@ namespace hpx {
 #include <hpx/config.hpp>
 #include <hpx/assert.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/tag_invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 
@@ -454,7 +454,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             while (first != last)
             {
-                if (hpx::util::invoke(pred, hpx::util::invoke(proj, *first)))
+                if (HPX_INVOKE(pred, HPX_INVOKE(proj, *first)))
                     *dest++ = *first;
                 first++;
             }
@@ -526,8 +526,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     // MSVC complains if proj is captured by ref below
                     util::loop_n<ExPolicy>(part_begin, part_size,
                         [&pred, proj, &curr](zip_iterator it) mutable {
-                            bool f = hpx::util::invoke(
-                                pred, hpx::util::invoke(proj, get<0>(*it)));
+                            bool f =
+                                HPX_INVOKE(pred, HPX_INVOKE(proj, get<0>(*it)));
 
                             if ((get<1>(*it) = f))
                                 ++curr;

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <hpx/config.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 
 #include <hpx/execution/algorithms/detail/predicates.hpp>
@@ -100,9 +101,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                             proj2 = std::forward<Proj2>(proj2)](
                             reference v, std::size_t i) -> void {
                             ++curr;
-                            if (hpx::util::invoke(op,
-                                    hpx::util::invoke(proj1, v),
-                                    hpx::util::invoke(proj2, *s_first)))
+                            if (HPX_INVOKE(op, HPX_INVOKE(proj1, v),
+                                    HPX_INVOKE(proj2, *s_first)))
                             {
                                 difference_type local_count = 1;
                                 FwdIter2 needle = s_first;
@@ -112,10 +112,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                                      local_count != diff && len != count;
                                      ++local_count, ++len, ++mid)
                                 {
-                                    if (!hpx::util::invoke(op,
-                                            hpx::util::invoke(proj1, *mid),
-                                            hpx::util::invoke(
-                                                proj2, *++needle)))
+                                    if (!HPX_INVOKE(op, HPX_INVOKE(proj1, *mid),
+                                            HPX_INVOKE(proj2, *++needle)))
                                         break;
                                 }
 
@@ -321,9 +319,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                             proj2 = std::forward<Proj2>(proj2)](
                             reference v, std::size_t i) -> void {
                             ++curr;
-                            if (hpx::util::invoke(op,
-                                    hpx::util::invoke(proj1, v),
-                                    hpx::util::invoke(proj2, *s_first)))
+                            if (HPX_INVOKE(op, HPX_INVOKE(proj1, v),
+                                    HPX_INVOKE(proj2, *s_first)))
                             {
                                 difference_type local_count = 1;
                                 FwdIter2 needle = s_first;
@@ -334,10 +331,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                                      len != difference_type(count);
                                      ++local_count, ++len, ++mid)
                                 {
-                                    if (!hpx::util::invoke(op,
-                                            hpx::util::invoke(proj1, *mid),
-                                            hpx::util::invoke(
-                                                proj2, *++needle)))
+                                    if (!HPX_INVOKE(op, HPX_INVOKE(proj1, *mid),
+                                            HPX_INVOKE(proj2, *++needle)))
                                         break;
                                 }
 

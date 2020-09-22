@@ -169,7 +169,7 @@ namespace hpx {
 #include <hpx/config.hpp>
 #include <hpx/assert.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/tag_invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 
@@ -216,9 +216,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
             {
                 while (true)
                 {
-                    if (hpx::util::invoke(comp,
-                            hpx::util::invoke(proj2, *first2),
-                            hpx::util::invoke(proj1, *first1)))
+                    if (HPX_INVOKE(comp, HPX_INVOKE(proj2, *first2),
+                            HPX_INVOKE(proj1, *first1)))
                     {
                         *dest++ = *first2++;
                         if (first2 == last2)
@@ -324,7 +323,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
             Iter1 mid1 = first1 + size1 / 2;
             Iter2 boundary2 = BinarySearchHelper::call(
-                first2, last2, hpx::util::invoke(proj1, *mid1), comp, proj2);
+                first2, last2, HPX_INVOKE(proj1, *mid1), comp, proj2);
             Iter3 target = dest + (mid1 - first1) + (boundary2 - first2);
 
             *target = *mid1;
@@ -553,7 +552,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 // Select pivot in left-side range.
                 Iter pivot = first + left_size / 2;
                 Iter boundary = lower_bound_helper::call(
-                    middle, last, hpx::util::invoke(proj, *pivot), comp, proj);
+                    middle, last, HPX_INVOKE(proj, *pivot), comp, proj);
                 Iter target = pivot + (boundary - middle);
 
                 // Swap two blocks, [pivot, middle) and [middle, boundary).
@@ -609,7 +608,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 // Select pivot in right-side range.
                 Iter pivot = middle + right_size / 2;
                 Iter boundary = upper_bound_helper::call(
-                    first, middle, hpx::util::invoke(proj, *pivot), comp, proj);
+                    first, middle, HPX_INVOKE(proj, *pivot), comp, proj);
                 Iter target = boundary + (pivot - middle);
 
                 // Swap two blocks, [boundary, middle) and [middle, pivot+1).

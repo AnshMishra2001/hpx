@@ -173,6 +173,7 @@ namespace hpx {
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/range.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 
@@ -209,8 +210,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
             for (/* */; first1 != last1 && first2 != last2;
                  (void) ++first1, ++first2)
             {
-                if (!hpx::util::invoke(f, hpx::util::invoke(proj1, *first1),
-                        hpx::util::invoke(proj2, *first2)))
+                if (!HPX_INVOKE(f, HPX_INVOKE(proj1, *first1),
+                        HPX_INVOKE(proj2, *first2)))
                     return false;
             }
             return first1 == last1 && first2 == last2;
@@ -287,9 +288,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     util::loop_n<ExPolicy>(it, part_count, tok,
                         [&f, &proj1, &proj2, &tok](zip_iterator const& curr) {
                             reference t = *curr;
-                            if (!hpx::util::invoke(f,
-                                    hpx::util::invoke(proj1, hpx::get<0>(t)),
-                                    hpx::util::invoke(proj2, hpx::get<1>(t))))
+                            if (!HPX_INVOKE(f,
+                                    HPX_INVOKE(proj1, hpx::get<0>(t)),
+                                    HPX_INVOKE(proj2, hpx::get<1>(t))))
                             {
                                 tok.cancel();
                             }
@@ -387,8 +388,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     util::loop_n<ExPolicy>(it, part_count, tok,
                         [&f, &tok](zip_iterator const& curr) {
                             reference t = *curr;
-                            if (!hpx::util::invoke(
-                                    f, hpx::get<0>(t), hpx::get<1>(t)))
+                            if (!HPX_INVOKE(f, hpx::get<0>(t), hpx::get<1>(t)))
                             {
                                 tok.cancel();
                             }

@@ -8,6 +8,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/assert.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 
 #include <hpx/execution/executors/execution_information.hpp>
 #include <hpx/executors/execution_policy.hpp>
@@ -137,15 +138,15 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
             bool first_partition = (start1 == 0);
             bool last_partition = (end1 == std::size_t(len1));
 
-            auto start_value = hpx::util::invoke(proj1, first1[start1]);
-            auto end_value = hpx::util::invoke(proj1, first1[end1]);
+            auto start_value = HPX_INVOKE(proj1, first1[start1]);
+            auto end_value = HPX_INVOKE(proj1, first1[end1]);
 
             // all but the last chunk require special handling
             if (!last_partition)
             {
                 // this chunk will be handled by the next one if all
                 // elements of this partition are equal
-                if (!hpx::util::invoke(f, start_value, end_value))
+                if (!HPX_INVOKE(f, start_value, end_value))
                 {
                     return;
                 }
@@ -154,14 +155,12 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
                 // the last element of the current chunk
                 if (end1 != 0)
                 {
-                    auto end_value1 =
-                        hpx::util::invoke(proj1, first1[end1 - 1]);
+                    auto end_value1 = HPX_INVOKE(proj1, first1[end1 - 1]);
 
-                    while (!hpx::util::invoke(f, end_value1, end_value) &&
-                        --end1 != 0)
+                    while (!HPX_INVOKE(f, end_value1, end_value) && --end1 != 0)
                     {
                         end_value = std::move(end_value1);
-                        end_value1 = hpx::util::invoke(proj1, first1[end1 - 1]);
+                        end_value1 = HPX_INVOKE(proj1, first1[end1 - 1]);
                     }
                 }
             }
@@ -170,14 +169,13 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
             // the first element of the current chunk
             if (start1 != 0)
             {
-                auto start_value1 =
-                    hpx::util::invoke(proj1, first1[start1 - 1]);
+                auto start_value1 = HPX_INVOKE(proj1, first1[start1 - 1]);
 
-                while (!hpx::util::invoke(f, start_value1, start_value) &&
-                    --start1 != 0)
+                while (
+                    !HPX_INVOKE(f, start_value1, start_value) && --start1 != 0)
                 {
                     start_value = std::move(start_value1);
-                    start_value1 = hpx::util::invoke(proj1, first1[start1 - 1]);
+                    start_value1 = HPX_INVOKE(proj1, first1[start1 - 1]);
                 }
             }
 

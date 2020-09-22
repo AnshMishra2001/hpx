@@ -10,7 +10,7 @@
 #pragma once
 
 #include <hpx/config.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 
 #include <hpx/execution/algorithms/detail/predicates.hpp>
@@ -105,7 +105,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     std::advance(first2, mismatched);
 
                     if (first1 != last1 && first2 != last2)
-                        return hpx::util::invoke(pred, *first1, *first2);
+                        return HPX_INVOKE(pred, *first1, *first2);
 
                     return first2 != last2;
                 };

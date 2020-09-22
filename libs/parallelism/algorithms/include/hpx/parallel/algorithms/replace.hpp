@@ -10,7 +10,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/parallel/util/tagged_pair.hpp>
 #include <hpx/type_support/unused.hpp>
@@ -42,7 +42,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             for (/* */; first != last; ++first)
             {
-                if (hpx::util::invoke(proj, *first) == old_value)
+                if (HPX_INVOKE(proj, *first) == old_value)
                 {
                     *first = new_value;
                 }
@@ -81,7 +81,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     std::distance(first, last),
                     [old_value, new_value, proj = std::forward<Proj>(proj)](
                         type& t) -> void {
-                        if (hpx::util::invoke(proj, t) == old_value)
+                        if (HPX_INVOKE(proj, t) == old_value)
                         {
                             t = new_value;
                         }
@@ -329,7 +329,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
         {
             for (/* */; first != last; ++first)
             {
-                if (hpx::util::invoke(proj, *first) == old_value)
+                if (HPX_INVOKE(proj, *first) == old_value)
                     *dest++ = new_value;
                 else
                     *dest++ = *first;
@@ -375,7 +375,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     [old_value, new_value, proj = std::forward<Proj>(proj)](
                         reference t) -> void {
                         using hpx::get;
-                        if (hpx::util::invoke(proj, get<0>(t)) == old_value)
+                        if (HPX_INVOKE(proj, get<0>(t)) == old_value)
                             get<1>(t) = new_value;
                         else
                             get<1>(t) = get<0>(t);    //-V573

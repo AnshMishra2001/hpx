@@ -254,6 +254,7 @@ namespace hpx {
 #include <hpx/config.hpp>
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
 #include <hpx/concepts/concepts.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/invoke_result.hpp>
 #include <hpx/functional/tag_invoke.hpp>
 #include <hpx/functional/traits/is_invocable.hpp>
@@ -303,8 +304,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
                 return detail::accumulate(first, last, std::forward<T_>(init),
                     [&r, &conv](T const& res, value_type const& next) -> T {
-                        return hpx::util::invoke(
-                            r, res, hpx::util::invoke(conv, next));
+                        return HPX_INVOKE(r, res, HPX_INVOKE(conv, next));
                     });
             }
 
@@ -326,11 +326,10 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
                 auto f1 = [r, conv = std::forward<Convert>(conv)](
                               Iter part_begin, std::size_t part_size) -> T {
-                    T val = hpx::util::invoke(conv, *part_begin);
+                    T val = HPX_INVOKE(conv, *part_begin);
                     return util::accumulate_n(++part_begin, --part_size,
                         std::move(val), [=](T const& res, reference next) -> T {
-                            return hpx::util::invoke(
-                                r, res, hpx::util::invoke(conv, next));
+                            return HPX_INVOKE(r, res, HPX_INVOKE(conv, next));
                         });
                 };
 
@@ -418,10 +417,10 @@ namespace hpx { namespace parallel { inline namespace v1 {
             F f_;
 
             template <typename Iter1, typename Iter2>
-            HPX_HOST_DEVICE HPX_FORCEINLINE constexpr auto operator()(Iter1 it1,
-                Iter2 it2) -> decltype(hpx::util::invoke(f_, *it1, *it2))
+            HPX_HOST_DEVICE HPX_FORCEINLINE constexpr auto operator()(
+                Iter1 it1, Iter2 it2) -> decltype(HPX_INVOKE(f_, *it1, *it2))
             {
-                return hpx::util::invoke(f_, *it1, *it2);
+                return HPX_INVOKE(f_, *it1, *it2);
             }
         };
 
@@ -438,8 +437,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
             HPX_HOST_DEVICE HPX_FORCEINLINE constexpr void operator()(
                 Iter1 it1, Iter2 it2)
             {
-                part_sum_ = hpx::util::invoke(
-                    op1_, part_sum_, hpx::util::invoke(op2_, *it1, *it2));
+                part_sum_ =
+                    HPX_INVOKE(op1_, part_sum_, HPX_INVOKE(op2_, *it1, *it2));
             }
         };
 
@@ -486,7 +485,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 // of the elements of a value-pack
                 auto result = util::detail::accumulate_values<ExPolicy>(
                     [&op1](T const& sum, T const& val) -> T {
-                        return hpx::util::invoke(op1, sum, val);
+                        return HPX_INVOKE(op1, sum, val);
                     },
                     std::move(part_sum), std::move(init));
 
@@ -562,7 +561,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     // for each of the elements of a value-pack
                     auto result = util::detail::accumulate_values<ExPolicy>(
                         [&op1](T const& sum, T const& val) -> T {
-                            return hpx::util::invoke(op1, sum, val);
+                            return HPX_INVOKE(op1, sum, val);
                         },
                         part_sum);
 
@@ -591,8 +590,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                         T ret = std::move(init);
                         for (auto&& fut : results)
                         {
-                            ret = hpx::util::invoke(
-                                op1, std::move(ret), fut.get());
+                            ret = HPX_INVOKE(op1, std::move(ret), fut.get());
                         }
                         return ret;
                     });

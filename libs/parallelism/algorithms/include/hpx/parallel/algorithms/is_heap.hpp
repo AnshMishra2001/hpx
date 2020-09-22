@@ -136,7 +136,7 @@ namespace hpx {
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/tag_invoke.hpp>
 #include <hpx/functional/traits/is_invocable.hpp>
 #include <hpx/futures/future.hpp>
@@ -176,9 +176,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
             for (difference_type i = 1; i < count; ++i)
             {
-                if (hpx::util::invoke(comp,
-                        hpx::util::invoke(proj, *(first + (i - 1) / 2)),
-                        hpx::util::invoke(proj, *(first + i))))
+                if (HPX_INVOKE(comp, HPX_INVOKE(proj, *(first + (i - 1) / 2)),
+                        HPX_INVOKE(proj, *(first + i))))
                     return false;
             }
             return true;
@@ -215,9 +214,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     util::loop_idx_n(base_idx, it, part_size, tok,
                         [&tok, first, &comp, &proj](
                             type const& v, std::size_t i) -> void {
-                            if (hpx::util::invoke(comp,
-                                    hpx::util::invoke(proj, *(first + i / 2)),
-                                    hpx::util::invoke(proj, v)))
+                            if (HPX_INVOKE(comp,
+                                    HPX_INVOKE(proj, *(first + i / 2)),
+                                    HPX_INVOKE(proj, v)))
                             {
                                 tok.cancel(0);
                             }
@@ -311,9 +310,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
             for (difference_type i = 1; i < count; ++i)
             {
-                if (hpx::util::invoke(comp,
-                        hpx::util::invoke(proj, *(first + (i - 1) / 2)),
-                        hpx::util::invoke(proj, *(first + i))))
+                if (HPX_INVOKE(comp, HPX_INVOKE(proj, *(first + (i - 1) / 2)),
+                        HPX_INVOKE(proj, *(first + i))))
                     return first + i;
             }
             return last;
@@ -350,9 +348,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     util::loop_idx_n(base_idx, it, part_size, tok,
                         [&tok, first, &comp, &proj](
                             type const& v, std::size_t i) -> void {
-                            if (hpx::util::invoke(comp,
-                                    hpx::util::invoke(proj, *(first + i / 2)),
-                                    hpx::util::invoke(proj, v)))
+                            if (HPX_INVOKE(comp,
+                                    HPX_INVOKE(proj, *(first + i / 2)),
+                                    HPX_INVOKE(proj, v)))
                             {
                                 tok.cancel(i);
                             }

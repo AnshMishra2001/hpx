@@ -9,6 +9,7 @@
 #pragma once
 
 #include <hpx/config.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/iterator_support/zip_iterator.hpp>
 
@@ -84,7 +85,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     util::loop_n<ExPolicy>(
                         part_begin, part_size, [op](zip_iterator it) {
                             get<2>(*it) =
-                                hpx::util::invoke(op, get<0>(*it), get<1>(*it));
+                                HPX_INVOKE(op, get<0>(*it), get<1>(*it));
                         });
                 };
 

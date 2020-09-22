@@ -8,7 +8,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/concepts/concepts.hpp>
-#include <hpx/functional/invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/parallel/util/tagged_pair.hpp>
 #include <hpx/type_support/unused.hpp>
@@ -322,8 +322,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
             while (++first != last)
             {
-                if (!hpx::util::invoke(pred, hpx::util::invoke(proj, *base),
-                        hpx::util::invoke(proj, *first)))
+                if (!HPX_INVOKE(pred, HPX_INVOKE(proj, *base),
+                        HPX_INVOKE(proj, *first)))
                 {
                     base = first;
                     *dest++ = *first;
@@ -348,8 +348,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
 
             while (++first != last)
             {
-                if (!hpx::util::invoke(pred, hpx::util::invoke(proj, base_val),
-                        hpx::util::invoke(proj, *first)))
+                if (!HPX_INVOKE(pred, HPX_INVOKE(proj, base_val),
+                        HPX_INVOKE(proj, *first)))
                 {
                     base_val = *first;
                     *dest++ = base_val;

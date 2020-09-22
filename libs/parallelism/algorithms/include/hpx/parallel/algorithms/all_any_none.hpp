@@ -230,6 +230,7 @@ namespace hpx {
 #include <hpx/concepts/concepts.hpp>
 #include <hpx/functional/tag_invoke.hpp>
 #include <hpx/iterator_support/range.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/type_support/void_guard.hpp>
 
@@ -293,8 +294,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               std::size_t part_count) mutable -> bool {
                     util::loop_n<ExPolicy>(part_begin, part_count, tok,
                         [&op, &tok, &proj](FwdIter const& curr) {
-                            if (hpx::util::invoke(
-                                    op, hpx::util::invoke(proj, *curr)))
+                            if (HPX_INVOKE(op, HPX_INVOKE(proj, *curr)))
                             {
                                 tok.cancel();
                             }
@@ -404,8 +404,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               std::size_t part_count) mutable -> bool {
                     util::loop_n<ExPolicy>(part_begin, part_count, tok,
                         [&op, &tok, &proj](FwdIter const& curr) {
-                            if (hpx::util::invoke(
-                                    op, hpx::util::invoke(proj, *curr)))
+                            if (HPX_INVOKE(op, HPX_INVOKE(proj, *curr)))
                             {
                                 tok.cancel();
                             }
@@ -515,8 +514,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               std::size_t part_count) mutable -> bool {
                     util::loop_n<ExPolicy>(part_begin, part_count, tok,
                         [&op, &tok, &proj](FwdIter const& curr) {
-                            if (!hpx::util::invoke(
-                                    op, hpx::util::invoke(proj, *curr)))
+                            if (!HPX_INVOKE(op, HPX_INVOKE(proj, *curr)))
                             {
                                 tok.cancel();
                             }

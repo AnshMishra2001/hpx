@@ -156,6 +156,7 @@ namespace hpx {
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
 #include <hpx/concepts/concepts.hpp>
 #include <hpx/functional/tag_invoke.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 #include <hpx/functional/bind_back.hpp>
 #include <hpx/iterator_support/range.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
@@ -241,7 +242,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 typename std::iterator_traits<Iter>::difference_type& ret)
             {
                 ret += traits::count_bits(
-                    hpx::util::invoke(op_, hpx::util::invoke(proj_, *curr)));
+                    HPX_INVOKE(op_, HPX_INVOKE(proj_, *curr)));
             }
         };
 

@@ -8,6 +8,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
+#include <hpx/functional/detail/invoke.hpp>
 
 #include <hpx/executors/execution_policy.hpp>
 #include <hpx/parallel/algorithms/adjacent_find.hpp>
@@ -81,8 +82,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     }
                 }
                 FwdIter ending = traits::compose(sit, std::prev(end));
-                if (!found &&
-                    hpx::util::invoke(op, *ending, *std::next(ending)))
+                if (!found && HPX_INVOKE(op, *ending, *std::next(ending)))
                 {
                     found = true;
                     output = traits::compose(sit, std::prev(end));
@@ -107,8 +107,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                             }
                         }
                         ending = traits::compose(sit, std::prev(end));
-                        if (hpx::util::invoke(
-                                op, *ending, *std::next(ending)) &&
+                        if (HPX_INVOKE(op, *ending, *std::next(ending)) &&
                             !found)
                         {
                             found = true;
@@ -253,8 +252,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     {
                         if (*it != last)
                             return *it;
-                        if (hpx::util::invoke(op,
-                                *std::prev(between_segments[i]),
+                        if (HPX_INVOKE(op, *std::prev(between_segments[i]),
                                 *(between_segments[i])))
                             return std::prev(between_segments[i]);
                         ++it;
