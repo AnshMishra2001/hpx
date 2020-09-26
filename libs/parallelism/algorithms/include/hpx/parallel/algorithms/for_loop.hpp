@@ -734,11 +734,11 @@ namespace hpx {
 #include <hpx/assert.hpp>
 #include <hpx/execution/algorithms/detail/predicates.hpp>
 #include <hpx/functional/detail/invoke.hpp>
+#include <hpx/functional/tag_invoke.hpp>
+#include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/modules/concepts.hpp>
 #include <hpx/modules/datastructures.hpp>
 #include <hpx/modules/executors.hpp>
-#include <hpx/modules/functional.hpp>
-#include <hpx/modules/iterator_support.hpp>
 #include <hpx/modules/threading_base.hpp>
 #include <hpx/modules/type_support.hpp>
 
