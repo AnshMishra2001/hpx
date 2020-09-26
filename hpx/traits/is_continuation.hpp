@@ -8,30 +8,27 @@
 
 #include <hpx/config.hpp>
 #include <hpx/type_support/always_void.hpp>
-#include <hpx/type_support/decay.hpp>
 
 #include <type_traits>
 
-namespace hpx { namespace traits
-{
-    namespace detail
-    {
+namespace hpx { namespace traits {
+    namespace detail {
         template <typename Continuation, typename Enable = void>
-        struct is_continuation_impl
-          : std::false_type
-        {};
+        struct is_continuation_impl : std::false_type
+        {
+        };
 
         template <typename Continuation>
         struct is_continuation_impl<Continuation,
-            typename util::always_void<typename Continuation::continuation_tag>::type
-        > : std::true_type
-        {};
-    }
+            typename util::always_void<
+                typename Continuation::continuation_tag>::type> : std::true_type
+        {
+        };
+    }    // namespace detail
 
     template <typename Continuation, typename Enable = void>
     struct is_continuation
-      : detail::is_continuation_impl<typename util::decay<Continuation>::type>
-    {};
-}}
-
-
+      : detail::is_continuation_impl<typename std::decay<Continuation>::type>
+    {
+    };
+}}    // namespace hpx::traits

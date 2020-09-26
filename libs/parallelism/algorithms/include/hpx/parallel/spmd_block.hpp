@@ -181,7 +181,7 @@ namespace hpx { namespace lcos { namespace local {
         using ftype = typename std::decay<F>::type;
         using first_type = typename hpx::util::first_argument<ftype>::type;
         using executor_type =
-            typename hpx::util::decay<ExPolicy>::type::executor_type;
+            typename std::decay<ExPolicy>::type::executor_type;
 
         using barrier_type = hpx::lcos::local::barrier;
         using table_type =
@@ -217,7 +217,7 @@ namespace hpx { namespace lcos { namespace local {
         using ftype = typename std::decay<F>::type;
         using first_type = typename hpx::util::first_argument<ftype>::type;
         using executor_type =
-            typename hpx::util::decay<ExPolicy>::type::executor_type;
+            typename std::decay<ExPolicy>::type::executor_type;
 
         using barrier_type = hpx::lcos::local::barrier;
         using table_type =

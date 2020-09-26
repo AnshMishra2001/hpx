@@ -132,7 +132,6 @@ namespace hpx { namespace lcos {
 #include <hpx/runtime/basename_registration.hpp>
 #include <hpx/runtime/naming/id_type.hpp>
 #include <hpx/runtime_local/get_num_localities.hpp>
-#include <hpx/type_support/decay.hpp>
 #include <hpx/type_support/unused.hpp>
 
 #include <cstddef>
@@ -369,7 +368,7 @@ namespace hpx { namespace lcos {
             this_site = static_cast<std::size_t>(hpx::get_locality_id());
         }
 
-        using arg_type = typename util::decay<T>::type;
+        using arg_type = typename std::decay<T>::type;
 
         auto broadcast_data_direct =
             [this_site](hpx::future<hpx::id_type>&& fid) -> hpx::future<T> {
